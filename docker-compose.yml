@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile    
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules                # <-- evita que el bind mount borre node_modules
+      - ./fronted:/fronted              # <-- solo si lo necesitas en backend
+    env_file:
+      - ./backend/.env
+    environment:
+      BD_URL: mysql://root:@host.docker.internal:3306/autolavado_db
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"  # <-- asegura que instale deps cada vez
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: tu_contraseña
+      MYSQL_DATABASE: autolavado_db
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

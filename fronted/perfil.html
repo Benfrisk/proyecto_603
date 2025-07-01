@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Cliente - Autolavado O.C</title>
+    <link rel="stylesheet" href="css/carrito.css">
+    <link rel="stylesheet" href="css/perfil.css">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <header id="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="img/LogoOficial.png" alt="Logo Oficial" class="header-logo">
+                <h1><a href="index.html">Autolavado O.C</a></h1>
+            </div>
+            <nav>
+                <a href="#menu" class="menu-toggle">Menu</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Menu -->
+    <nav id="menu">
+        <div class="inner">
+            <h2>Menu</h2>
+            <ul class="links">
+                <li><a href="cliente.html">Inicio</a></li>
+                <li><a href="perfil.html">Mi perfil</a></li>
+                <li><a href="Promociones.html">Autolavado</a></li>
+                <li><a href="CarritoCliente.html">Productos Extras</a></li>
+                <li><a href="estacionamiento.html">Estacionamiento</a></li>
+                <li><a href="index.html" class="logout">Cerrar Sesión</a></li>
+            </ul>
+            <a href="#" class="close">&times;</a>
+        </div>
+    </nav>
+
+
+
+    <!-- Contenido del Perfil -->
+    <main class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                    <h3 id="userName"><!-- Nombre del usuario desde BD --></h3>
+                    <p class="member-since">Cliente desde: <!-- Fecha desde BD --></p>
+                    <span class="status-badge active">Activo</span>
+                </div>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="personal">Información Personal</button>
+                <button class="tab-btn" data-tab="history">Historial</button>
+            </div>
+
+            <!-- Tab: Información Personal -->
+            <div class="tab-content active" id="personal">
+                <form class="profile-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">Nombre</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Teléfono</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab: Historial -->
+            <div class="tab-content" id="history">
+                <div class="history-section">
+                    <div class="history-group">
+                        <h4><i class="fas fa-car-wash"></i> Historial de Servicios</h4>
+                        <div class="history-list" id="servicesHistory">
+                            <!-- Los servicios se cargarán dinámicamente desde la BD -->
+                            <p class="no-data">No hay servicios registrados</p>
+                        </div>
+                    </div>
+
+                    <div class="history-group">
+                        <h4><i class="fas fa-parking"></i> Reservas de Estacionamiento</h4>
+                        <div class="history-list" id="parkingHistory">
+                            <!-- Las reservas se cargarán dinámicamente desde la BD -->
+                            <p class="no-data">No hay reservas registradas</p>
+                        </div>
+                    </div>
+
+                    <div class="history-group">
+                        <h4><i class="fas fa-tags"></i> Promociones Utilizadas</h4>
+                        <div class="history-list" id="promotionsHistory">
+                            <!-- Las promociones se cargarán dinámicamente desde la BD -->
+                            <p class="no-data">No hay promociones utilizadas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button type="button" class="btn-save">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <button type="button" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Panel de Estadísticas -->
+        <div class="stats-panel">
+            <h4>Mis Estadísticas</h4>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <i class="fas fa-car-wash"></i>
+                    <div>
+                        <span class="stat-number" id="totalServices">0</span>
+                        <span class="stat-label">Servicios Realizados</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div>
+                        <span class="stat-number" id="totalSpent">$0</span>
+                        <span class="stat-label">Total Gastado</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div>
+                        <span class="stat-number" id="activeReservations">0</span>
+                        <span class="stat-label">Reservas Activas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script>
+        function parseJwt(token) {
+            try {
+                return JSON.parse(atob(token.split('.')[1]));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log('No hay token, redirigir a login');
+            window.location.href = 'index.html';
+        }
+
+        const decoded = parseJwt(token);
+        const userId = decoded?.id;
+        if (!userId) {
+            console.log('Token inválido o no tiene id');
+            // window.location.href = 'index.html';
+        }
+        console.log('UserId obtenido del token:', userId);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadUserData();
+            cargarHistorial();
+            cargarReservas();  // Aquí la llamada nueva
+
+
+
+            const menuToggle = document.querySelector('.menu-toggle');
+            const closeButton = document.querySelector('#menu .close');
+            const menu = document.querySelector('#menu');
+
+            menuToggle.addEventListener('click', e => {
+                e.preventDefault();
+                menu.classList.add('active');
+            });
+
+            closeButton.addEventListener('click', e => {
+                e.preventDefault();
+                menu.classList.remove('active');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const targetTab = this.getAttribute('data-tab');
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+
+            const saveButton = document.querySelector('.btn-save');
+            saveButton.addEventListener('click', saveUserChanges);
+        });
+
+        async function loadUserData() {
+            try {
+                const res = await fetch(`http://localhost:3000/api/usuarios/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!res.ok) throw new Error('No se pudo obtener datos del usuario');
+                const user = await res.json();
+
+                // Mostrar nombre completo (solo nombre)
+                document.getElementById('userName').textContent = user.nombre || '';
+
+                // Llenar input
+                document.getElementById('firstName').value = user.nombre || '';
+
+                document.getElementById('email').value = user.correo || '';
+                document.getElementById('phone').value = user.telefono || '';
+
+            } catch (error) {
+                console.error(error);
+                alert('Error al cargar datos del usuario');
+            }
+        }
+
+        async function saveUserChanges() {
+            const saveButton = document.querySelector('.btn-save');
+            saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            saveButton.disabled = true;
+
+            const updatedUser = {
+                nombre: document.getElementById('firstName').value.trim(),
+                correo: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('phone').value.trim()
+            };
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/usuarios/${userId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedUser)
+                });
+                if (!res.ok) throw new Error('Error al guardar los cambios');
+
+                const data = await res.json();
+
+                // Actualiza el nombre mostrado
+                document.getElementById('userName').textContent = data.nombre || '';
+
+                saveButton.innerHTML = '<i class="fas fa-check"></i> Guardado';
+                setTimeout(() => {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+                    saveButton.disabled = false;
+                }, 1500);
+
+            } catch (error) {
+                console.error(error);
+                alert('No se pudieron guardar los cambios');
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+                saveButton.disabled = false;
+            }
+        }
+
+
+        async function saveUserChanges() {
+            const saveButton = document.querySelector('.btn-save');
+
+            const updatedUser = {
+                nombre: document.getElementById('firstName').value.trim(),
+                correo: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('phone').value.trim()
+            };
+
+            console.log('Intentando guardar cambios con datos:', updatedUser);
+
+            saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            saveButton.disabled = true;
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/usuarios/${userId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedUser)
+                });
+
+                console.log('Respuesta del servidor:', res);
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error('Error en la respuesta del servidor:', errorText);
+                    throw new Error('Error al guardar los cambios');
+                }
+
+                const data = await res.json();
+                console.log('Datos recibidos después de guardar:', data);
+
+                document.getElementById('userName').textContent = (data.nombre || '') + ' ' + (data.apellido || '');
+
+                saveButton.innerHTML = '<i class="fas fa-check"></i> Guardado';
+                setTimeout(() => {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+                    saveButton.disabled = false;
+                }, 1500);
+
+            } catch (error) {
+                console.error('Catch error:', error);
+                alert('No se pudieron guardar los cambios');
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+                saveButton.disabled = false;
+            }
+        }
+
+
+        async function cargarHistorial() {
+            try {
+                const res = await fetch(`http://localhost:3000/api/compras/historial/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!res.ok) throw new Error('No se pudo cargar el historial');
+                const data = await res.json();
+
+                const servicesHistory = document.getElementById('servicesHistory');
+                const promotionsHistory = document.getElementById('promotionsHistory');
+
+                servicesHistory.innerHTML = '';
+                promotionsHistory.innerHTML = '';
+
+                if (data.compras.length === 0) {
+                    servicesHistory.innerHTML = '<p class="no-data">No hay servicios registrados</p>';
+                    promotionsHistory.innerHTML = '<p class="no-data">No hay promociones utilizadas</p>';
+                    return;
+                }
+
+                data.compras.forEach(compra => {
+                    // Servicios
+                    if (compra.servicios.length > 0) {
+                        compra.servicios.forEach(servicio => {
+                            const div = document.createElement('div');
+                            div.classList.add('history-item');
+                            div.textContent = `${servicio.servicio_nombre} - Cantidad: ${servicio.cantidad} - Precio unitario: $${servicio.precio_unitario}`;
+                            servicesHistory.appendChild(div);
+                        });
+                    } else {
+                        servicesHistory.innerHTML = '<p class="no-data">No hay servicios registrados</p>';
+                    }
+
+                    // Promociones
+                    if (compra.promocion) {
+                        const div = document.createElement('div');
+                        div.classList.add('history-item');
+                        div.textContent = `${compra.promocion.nombre} - ${compra.promocion.descripcion}`;
+                        promotionsHistory.appendChild(div);
+                    }
+                });
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('servicesHistory').innerHTML = '<p class="no-data">Error al cargar servicios</p>';
+                document.getElementById('promotionsHistory').innerHTML = '<p class="no-data">Error al cargar promociones</p>';
+            }
+        }
+
+
+
+        async function cargarReservas() {
+            try {
+                const res = await fetch(`http://localhost:3000/api/reservas/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) throw new Error('No se pudo cargar las reservas');
+
+                const data = await res.json();
+
+                const parkingHistory = document.getElementById('parkingHistory');
+                parkingHistory.innerHTML = '';
+
+                if (!data.reservas || data.reservas.length === 0) {
+                    parkingHistory.innerHTML = '<p class="no-data">No hay reservas registradas</p>';
+                    return;
+                }
+
+                data.reservas.forEach(reserva => {
+                    const div = document.createElement('div');
+                    div.classList.add('history-item');
+
+                    // Ajusta según los campos que tengas en la reserva
+                    div.textContent = `Fecha: ${new Date(reserva.fecha_solicitada).toLocaleDateString()} - Estado: ${reserva.estado || 'Desconocido'}`;
+
+                    parkingHistory.appendChild(div);
+                });
+            } catch (error) {
+                console.error(error);
+                const parkingHistory = document.getElementById('parkingHistory');
+                parkingHistory.innerHTML = '<p class="no-data">Error al cargar reservas</p>';
+            }
+        }
+
+    </script>
+
+
+</body>
+
+</html>

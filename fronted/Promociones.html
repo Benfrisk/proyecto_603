@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servicios de Autolavado O.C</title>
+    <link rel="stylesheet" href="css/Promociones.css" />
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+    <header id="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="img/LogoOficial.png" alt="Logo Oficial" class="header-logo" />
+                <h1><a href="index.html">Estacionamiento y Autolavado O.C</a></h1>
+            </div>
+            <nav>
+                <a href="#menu" class="menu-toggle">Menu</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Menu -->
+    <nav id="menu">
+        <div class="inner">
+            <h2>Menu</h2>
+            <ul class="links">
+                <li><a href="cliente.html">Inicio</a></li>
+                <li><a href="perfil.html">Mi perfil</a></li>
+                <li><a href="Promociones.html">Autolavado</a></li>
+                <li><a href="CarritoCliente.html">Productos Extras</a></li>
+                <li><a href="estacionamiento.html">Estacionamiento</a></li>
+                <li><a href="index.html" class="logout">Cerrar Sesión</a></li>
+            </ul>
+            <a href="#" class="close">&times;</a>
+        </div>
+    </nav>
+
+    <div class="banner-container">
+        <img src="img/Promocion/impala.png" alt="Servicios de Autolavado" class="banner-image" />
+        <div class="banner-text">
+            <div class="title-container">
+                <h1 class="main-title">Nuestras Promociones Especiales</h1>
+            </div>
+            <p>Las mejores promociones que puede conseguir</p>
+        </div>
+    </div>
+
+    <!-- PROMOCIONES -->
+    <div class="container">
+        <!-- Contenedor de promociones -->
+        <div id="promotionsGrid" class="promotions-grid">
+            <!-- Las promociones se cargarán aquí dinámicamente -->
+        </div>
+
+        <!-- Visualización de la promo seleccionada -->
+        <div id="localStorageDisplay" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f8f9fa; color: black;">
+            <strong>Promoción seleccionada:</strong> <span id="promoSelected">Ninguna</span>
+        </div>
+
+        <!-- Modal para más servicios -->
+        <div id="moreServicesModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>¿Desea agregar más servicios?</h2>
+                <p>Tenemos servicios adicionales que podrían interesarte.</p>
+                <div class="modal-buttons">
+                    <button id="goToServices" class="btn-primary">
+                        <i class="fas fa-plus-circle"></i> Ver Más Servicios
+                    </button>
+                    <button id="continueBooking" class="btn-primary">
+                        <i class="fas fa-check-circle"></i> Confirmar Servicio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Todos los derechos Reservados a O.C</p>
+    </footer>
+
+    <!-- Script unificado -->
+    <script src="js/promoClient.js"></script>
+    
+    <!-- Script pequeño para mostrar la promo seleccionada -->
+    <script>
+        // Mostrar la promoción seleccionada al cargar la página
+        document.addEventListener("DOMContentLoaded", () => {
+            const promoGuardada = localStorage.getItem("promoSeleccionada");
+            const promoSelectedElement = document.getElementById("promoSelected");
+            
+            if (promoGuardada) {
+                promoSelectedElement.textContent = promoGuardada;
+                promoSelectedElement.style.fontWeight = "bold";
+                promoSelectedElement.style.color = "#092d81";
+            } else {
+                promoSelectedElement.textContent = "Ninguna";
+            }
+            
+            // Verificar token de autenticación
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "index.html";
+            }
+        });
+    </script>
+</body>
+</html>

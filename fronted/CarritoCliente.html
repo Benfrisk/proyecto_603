@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Productos Extras - Autolavado O.C</title>
+    <link rel="stylesheet" href="css/carrito.css" />
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+    <header id="header">
+      <div class="header-content">
+        <div class="logo-container">
+          <img src="img/LogoOficial.png" alt="Logo Oficial" class="header-logo" />
+          <h1><a href="index.html">Estacionamiento y Autolavado O.C</a></h1>
+        </div>
+        <nav>
+          <a href="#menu" class="menu-toggle">Menu</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Menu -->
+    <nav id="menu">
+      <div class="inner">
+        <h2>Menu</h2>
+        <ul class="links">
+          <li><a href="cliente.html">Inicio</a></li>
+          <li><a href="perfil.html">Mi perfil</a></li>
+          <li><a href="Promociones.html">Autolavado</a></li>
+          <li><a href="CarritoCliente.html">Productos Extras</a></li>
+          <li><a href="estacionamiento.html">Estacionamiento</a></li>
+          <li><a href="index.html" class="logout">Cerrar Sesión</a></li>
+        </ul>
+        <a href="#" class="close">&times;</a>
+      </div>
+    </nav>
+
+    <div class="banner-container">
+      <img src="img/carrito/Logo.png" alt="Servicios de Autolavado" class="banner-image" />
+      <div class="banner-text">
+        <div class="title-container">
+          <h2>Servicios de Autolavado O.C</h2>
+          <div class="cart-icon-container">
+            <i class="fas fa-shopping-cart cart-icon" id="cart-toggle"></i>
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
+        </div>
+        <p>Bienvenido al Catálogo, que sea un buen día querido Cliente</p>
+      </div>
+    </div>
+
+    <!-- Panel del carrito de compras -->
+    <div id="cart-panel" class="cart-panel">
+      <div class="cart-header">
+        <h3>Tu Carrito</h3>
+        <button class="close-cart">&times;</button>
+      </div>
+      <div class="cart-items" id="cart-items">
+        <!-- Los items del carrito se agregarán aquí dinámicamente -->
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span id="cart-total">$0</span>
+        </div>
+        <button id="empty-cart" class="empty-cart-btn">Vaciar Carrito</button>
+        <button id="confirm-purchase" class="checkout-btn">
+          Finalizar Compra
+        </button>
+      </div>
+    </div>
+
+    <main class="menu-container">
+      <!-- Servicios se cargarán dinámicamente desde la API -->
+      <div id="services-container" class="services-grid"></div>
+    </main>
+
+    <footer>
+      <p>Todos los derechos Reservados a O.C</p>
+    </footer>
+
+    <script src="js/carritoCliente.js"></script>
+</body>
+</html>
