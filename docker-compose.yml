@@ -15,7 +15,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      BD_URL: mysql://root:@host.docker.internal:3306/autolavado_db
+      BD_URL: BD_URL = mysql://root:@192.168.236.171:3306/autolavado_db
     working_dir: /app
     command: sh -c "npm install && npm run dev"  # <-- asegura que instale deps cada vez
     depends_on:
